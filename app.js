@@ -69,6 +69,20 @@ app.put("/todos/", async (request, response) => {
     response.send("Invalid Todo Status");
   }
 });
+
+app.put("/todos/", async (request, response) => {
+  const { id, todo, category, priority, status, due_date } = request.body;
+  const selectUserQuery = `SELECT * FROM todo WHERE priority = '${priority}';`;
+  const databaseUser = await database.get(
+    convertTodoDbObjectToResponseObject(selectUserQuery)
+  );
+  if (databaseUser === undefined) {
+    response.status(400);
+    response.send("Invalid Todo Priority");
+  }
+});
+
+
 app.get("/todos/", async (request, response) => {
   let data = null;
   let getTodosQuery = "";
