@@ -57,6 +57,18 @@ const hasCategoryProperty = (requestQuery) => {
   return requestQuery.category !== undefined;
 };
 
+
+app.put("/todos/", async (request, response) => {
+  const { id, todo, category, priority, status, due_date } = request.body;
+  const selectUserQuery = `SELECT * FROM todo WHERE status = '${status}';`;
+  const databaseUser = await database.get(
+    convertTodoDbObjectToResponseObject(selectUserQuery)
+  );
+  if (databaseUser === undefined) {
+    response.status(400);
+    response.send("Invalid Todo Status");
+  }
+});
 app.get("/todos/", async (request, response) => {
   let data = null;
   let getTodosQuery = "";
